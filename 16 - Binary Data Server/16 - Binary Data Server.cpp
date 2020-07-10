@@ -10,9 +10,9 @@
 #endif // !IDT_TIMER1_MILIS
 
 #include "16 - Binary Data Server.h"
-#include "C:\Include\ClientControl.h"
-#include "C:\Include\ObjectBinaryDataCommunicator.h"
-#include "C:\Include\My_XTrace.h"
+#include "C:\Include\Include\ClientControl.h"
+#include "OBDC_Server.h"
+#include "C:\Include\Include\My_XTrace.h"
 #include <winsock2.h>
 
 #define MAX_LOADSTRING 100
@@ -71,7 +71,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             MB_OK | MB_ICONERROR);
         return FALSE;
     }
-
     //SOCKET initialization
     if (!Ini_WSA_non_blocking(hwnd))
     {
@@ -432,7 +431,7 @@ void UpdateUI(HWND hwnd, HDC hdc, const wchar_t* message) {
 
         SetWindowText(clientControl[index]->hwnd3_IP, ip_wchar);
         SetWindowText(clientControl[index]->hwnd4_Port, port_wchar);
-        SetWindowTextA(clientControl[index]->hwnd5_RecvMessage, (LPCSTR)WSAnb.BufferRecieved[index]);
+        SetWindowTextA(clientControl[index]->hwnd5_RecvMessage, (LPCSTR)WSAnb.BufferReceived[index]);
     }
 }
 
