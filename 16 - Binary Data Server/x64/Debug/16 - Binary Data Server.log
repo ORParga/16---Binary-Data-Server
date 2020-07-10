@@ -1,0 +1,8 @@
+﻿  16 - Binary Data Server.cpp
+C:\Programacion\C++\Comunications\16 - Binary Data Server\16 - Binary Data Server\OBDC_Server.h(122,27): warning C4101: 'comodin2': variable local sin referencia
+C:\Programacion\C++\Comunications\16 - Binary Data Server\16 - Binary Data Server\OBDC_Server.h(122,13): warning C4101: 'comodin': variable local sin referencia
+C:\Programacion\C++\Comunications\16 - Binary Data Server\16 - Binary Data Server\OBDC_Server.h(676,1): warning C4312: 'conversión de tipo': conversión de 'unsigned long' a 'unsigned char *' de mayor tamaño
+C:\Programacion\C++\Comunications\16 - Binary Data Server\16 - Binary Data Server\16 - Binary Data Server.cpp(295,63): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
+C:\Programacion\C++\Comunications\16 - Binary Data Server\16 - Binary Data Server\16 - Binary Data Server.cpp(304,36): warning C4244: '=': conversión de 'LRESULT' a 'int'; posible pérdida de datos
+C:\Programacion\C++\Comunications\16 - Binary Data Server\16 - Binary Data Server\OBDC_Server.h(205): warning C4715: 'OBDC_Server::GetIPList': no todas las rutas de acceso de control devuelven un valor
+  16 - Binary Data Server.vcxproj -> C:\Programacion\C++\Comunications\16 - Binary Data Server\16 - Binary Data Server\x64\Debug\16 - Binary Data Server.exe

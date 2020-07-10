@@ -49,7 +49,7 @@ public: static const int DATA_BUFSIZE = 512;
 protected: WSAEVENT EventArray[WSA_MAXIMUM_WAIT_EVENTS];
 protected: SOCKET SocketArray[WSA_MAXIMUM_WAIT_EVENTS];
 public: sockaddr AddressArray[WSA_MAXIMUM_WAIT_EVENTS];
-public: CHAR BufferReceived[DATA_BUFSIZE + 1][WSA_MAXIMUM_WAIT_EVENTS] = { 0 };
+public: unsigned char BufferReceived[DATA_BUFSIZE + 1][WSA_MAXIMUM_WAIT_EVENTS] = { 0 };
 public:int ReceivedBytes[WSA_MAXIMUM_WAIT_EVENTS] = { 0 };
 public: BOOL OverflowAlert[WSA_MAXIMUM_WAIT_EVENTS] = { FALSE };
 public: STATE StateArray[WSA_MAXIMUM_WAIT_EVENTS] = { STATE::NONE };
@@ -512,7 +512,7 @@ protected:void FD_CLOSE_response(int SocketArrayIndex) {
          /// </summary>
          /// <param name="SocketArrayIndex">Index of the receiving socket in the internal SocketArray[]</param>
 protected:void FD_READ_response(int SocketArrayIndex) {
-    ReceivedBytes[SocketArrayIndex] = recv(SocketArray[SocketArrayIndex], BufferReceived[SocketArrayIndex], DATA_BUFSIZE, 0);
+    ReceivedBytes[SocketArrayIndex] = recv(SocketArray[SocketArrayIndex], (char*)BufferReceived[SocketArrayIndex], DATA_BUFSIZE, 0);
     if (ReceivedBytes[SocketArrayIndex] >= DATA_BUFSIZE)
     {
         OverflowAlert[SocketArrayIndex] = TRUE;
@@ -576,7 +576,7 @@ protected:bool GetBinaryDataFromSocketBuffer(int BufferArrayIndex,SharedClass* r
                     sharedData.data4 += BufferReceived[BufferArrayIndex][i++] << 24;
                 }
                 //Verificar checksum
-                for (i = buffer_index, checksum = 0; i < buffer_index + sizeof(SharedClass) - sizeof(sharedData.Mark); i++)
+                for (i = buffer_index+4, checksum = 0; i < buffer_index + sizeof(SharedClass) - sizeof(sharedData.Mark); i++)
                 {
                     checksum += BufferReceived[BufferArrayIndex][i];
                 }
@@ -588,7 +588,7 @@ protected:bool GetBinaryDataFromSocketBuffer(int BufferArrayIndex,SharedClass* r
                     receivedSharedObject->data2 = sharedData.data2;
                     receivedSharedObject->data3 = sharedData.data3;
                     receivedSharedObject->data4 = sharedData.data4;
-                    returnValue = false;
+                    returnValue = true;
                     //En este punto devería comprobar si hay espacio en la clase para alvergar otro paquete entrante
                     //que pueda estar en la cola del buffer
                     //if(hay espacio en la clase OBDC_Server para más datos entrantes)

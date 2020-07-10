@@ -1,0 +1,2 @@
+C:\Programacion\C++\Comunications\16 - Binary Data Server\16 - Binary Data Server\x64\Debug\16 - Binary Data Server.exe
+C:\Programacion\C++\Comunications\16 - Binary Data Server\16 - Binary Data Server\x64\Debug\16 - Binary Data Server.pdb
