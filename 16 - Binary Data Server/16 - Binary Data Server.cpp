@@ -291,8 +291,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             {
                 const int textSize = 1000;
                 char text[textSize];
-                if (GetWindowTextA(clientControl[control]->hwnd6_SendMessage, text, textSize) != 0)
-                    WSAnb.SendText(control, text, strlen(text));
+                unsigned long numberConverted_dword=0;
+                unsigned char numberConverted_byte=0;
+                SharedClass local_sharedData;
+                SetDataFromWindow(clientControl[control]->hwnd6a_SendData, &local_sharedData.data1);
+                SetDataFromWindow(clientControl[control]->hwnd6b_SendData, &local_sharedData.data2);
+                SetDataFromWindow(clientControl[control]->hwnd6c_SendData, &local_sharedData.data3);
+                SetDataFromWindow(clientControl[control]->hwnd6d_SendData, &local_sharedData.data4);
+                 WSAnb.SendData(control, local_sharedData);
                 return 0;
             }
         }
@@ -360,7 +366,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     }
     return 0;
 }
-
 /// <summary>
 /// Show the Server's basic parametres ( Status, Ip and Port )  and the client's textboxes
 /// </summary>
@@ -410,7 +415,7 @@ void UpdateUI(HWND hwnd, HDC hdc, const wchar_t* message) {
     }
     //******************************Update TexBoxes lines content******************************
 
-    wchar_t text[10];
+    wchar_t text[20];
     wchar_t ip_wchar[20];
     wchar_t port_wchar[20];
     for (unsigned int index = 1; index < lastClientControl; index++) {
@@ -431,7 +436,15 @@ void UpdateUI(HWND hwnd, HDC hdc, const wchar_t* message) {
 
         SetWindowText(clientControl[index]->hwnd3_IP, ip_wchar);
         SetWindowText(clientControl[index]->hwnd4_Port, port_wchar);
-        SetWindowTextA(clientControl[index]->hwnd5_RecvMessage, (LPCSTR)WSAnb.BufferReceived[index]);
+        _itow_s(WSAnb.sharedData.data1, text, 10);
+        SetWindowText(clientControl[index]->hwnd5a_RecvData, text);
+        _itow_s(WSAnb.sharedData.data2, text, 10);
+        SetWindowText(clientControl[index]->hwnd5b_RecvData, text);
+        _itow_s(WSAnb.sharedData.data3, text, 10);
+        SetWindowText(clientControl[index]->hwnd5c_RecvData, text);
+        _itow_s(WSAnb.sharedData.data4, text, 10);
+        SetWindowText(clientControl[index]->hwnd5d_RecvData, text);
+        //SetWindowTextA(clientControl[index]->hwnd5_RecvMessage, (LPCSTR)WSAnb.BufferReceived[index]);
     }
 }
 

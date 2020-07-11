@@ -54,11 +54,11 @@ public:int ReceivedBytes[WSA_MAXIMUM_WAIT_EVENTS] = { 0 };
 public: BOOL OverflowAlert[WSA_MAXIMUM_WAIT_EVENTS] = { FALSE };
 public: STATE StateArray[WSA_MAXIMUM_WAIT_EVENTS] = { STATE::NONE };
       //******************************* SEND -RECIEVE data ****************************************
-public: SharedClass sharedData;
 protected: static const int SendBufferSize = 512;
 protected: char SendBuffer[SendBufferSize];
 protected: int SendBytes = 0;
-
+public: SharedClass sharedData;
+public:unsigned char sharedDataBuffer[sizeof(SharedClass)];
          /// <summary>
          /// printf() style debugging
          /// https://stackoverflow.com/questions/15240/
@@ -538,7 +538,7 @@ protected:bool GetBinaryDataFromSocketBuffer(int BufferArrayIndex,SharedClass* r
 {
     bool returnValue = false;
     unsigned short mark_index = 0, buffer_index = 0, sharedDataStart = 0;
-    unsigned short i;
+    unsigned short i, endLoop;
     unsigned long checksum = 0;
     SharedClass sharedData;
 
@@ -576,7 +576,9 @@ protected:bool GetBinaryDataFromSocketBuffer(int BufferArrayIndex,SharedClass* r
                     sharedData.data4 += BufferReceived[BufferArrayIndex][i++] << 24;
                 }
                 //Verificar checksum
-                for (i = buffer_index+4, checksum = 0; i < buffer_index + sizeof(SharedClass) - sizeof(sharedData.Mark); i++)
+
+                endLoop = i;
+                for (i = buffer_index+ sizeof(sharedData.checksum), checksum = 0; i < endLoop; i++)
                 {
                     checksum += BufferReceived[BufferArrayIndex][i];
                 }
@@ -650,8 +652,10 @@ protected:void FD_WRITE_response(int SocketArrayIndex) {
          /// returns fails but lastWSAError is not updated
          /// In case of OTHER error, lastWSAError stores the value returned by WSAGetLastError().</returns>
 public:BOOL SendText(unsigned int socketIndex, char* text, int textLen) {
+
     lastWSAError = 0;
     int bytesSend = 0;
+
     if ((socketIndex > 0) && (socketIndex < ClientIndex)) {
         bytesSend = send(SocketArray[socketIndex], text, textLen, 0);
         if (bytesSend == SOCKET_ERROR) {
@@ -667,16 +671,91 @@ public:BOOL SendText(unsigned int socketIndex, char* text, int textLen) {
         return FALSE;
     }
 }
-public:BOOL SendData(unsigned int socketIndex) {
-    //Prepare buffer**********************************
+public:bool SendData(unsigned int socketIndex,SharedClass local_sharedData) {
+
+    lastWSAError = 0;
+    int bytesSend = 0;
+    unsigned char sendBuffer[sizeof(SharedClass)];
+
+    PrepareBuffer(local_sharedData,sendBuffer);
+    //SendBuffer
+    if ((socketIndex > 0) && (socketIndex < ClientIndex)) {
+        bytesSend = send(SocketArray[socketIndex], (char*)sendBuffer, sizeof(sendBuffer), 0);
+        if (bytesSend == SOCKET_ERROR) {
+            lastWSAError = WSAGetLastError();
+            XTrace(L"Error al enviar texto. Codigo: %u = %s", lastWSAError, WindowsErrorToString(lastWSAError));
+            return FALSE;
+        }
+        return TRUE;
+    }
+    else
+    {
+        XTrace(L"WSA_non_blocking::SendText() error: socketIndex out of bounds\n");
+        return FALSE;
+    }
+    return false;
+
+}
+public:bool PrepareBuffer(SharedClass local_sharedData, unsigned char sendBuffer[sizeof(SharedClass)]) {
+    //Prepare checksum**********************************
     unsigned long bufferSize = sizeof(SharedClass);
 
-    unsigned long checksum = 0;
-    unsigned long* pointer = &sharedData.data3;
-    unsigned char* myByte = (unsigned char*)pointer[0];
-    checksum += (*myByte);
-    //SendBuffer
+    //local_sharedData.data1 = 1;
+    //local_sharedData.data2 = 2;
+    //local_sharedData.data3 = 0x20100804;
+    //local_sharedData.data4 = 0x00008040;
 
+
+    unsigned long checksum = local_sharedData.data1 + local_sharedData.data2;
+
+    unsigned long* pointer = &local_sharedData.data3;
+    unsigned char* myByte = (unsigned char*)pointer;
+
+    checksum += (myByte[0]);
+    checksum += (myByte[1]);
+    checksum += (myByte[2]);
+    checksum += (myByte[3]);
+
+    pointer = &local_sharedData.data4;
+    myByte = (unsigned char*)pointer;
+
+    checksum += (myByte[0]);
+    checksum += (myByte[1]);
+    checksum += (myByte[2]);
+    checksum += (myByte[3]);
+
+    local_sharedData.checksum = checksum;
+    int i = 0;
+    //Prepare buffer**********************************
+    sendBuffer[i] = local_sharedData.Mark[0];
+    sendBuffer[++i] = local_sharedData.Mark[1];
+    sendBuffer[++i] = local_sharedData.Mark[2];
+    sendBuffer[++i] = local_sharedData.Mark[3];
+    sendBuffer[++i] = local_sharedData.Mark[4];
+    sendBuffer[++i] = local_sharedData.Mark[5];
+    sendBuffer[++i] = local_sharedData.Mark[6];
+    sendBuffer[++i] = local_sharedData.Mark[7];
+
+
+    sendBuffer[++i] = checksum & 0xFF;
+    sendBuffer[++i] = (checksum >> 8) & 0xFF;
+    sendBuffer[++i] = (checksum >> 16) & 0xFF;
+    sendBuffer[++i] = (checksum >> 24) & 0xFF;
+
+    sendBuffer[++i] = local_sharedData.data1;
+    sendBuffer[++i] = local_sharedData.data2;
+
+    sendBuffer[++i] = local_sharedData.data3 & 0xFF;
+    sendBuffer[++i] = (local_sharedData.data3 >> 8) & 0xFF;
+    sendBuffer[++i] = (local_sharedData.data3 >> 16) & 0xFF;
+    sendBuffer[++i] = (local_sharedData.data3 >> 24) & 0xFF;
+
+    sendBuffer[++i] = local_sharedData.data4 & 0xFF;
+    sendBuffer[++i] = (local_sharedData.data4 >> 8) & 0xFF;
+    sendBuffer[++i] = (local_sharedData.data4 >> 16) & 0xFF;
+    sendBuffer[++i] = (local_sharedData.data4 >> 24) & 0xFF;
+
+    return true;
 }
 /// <summary>
 /// My personal version of inet_ntop()
