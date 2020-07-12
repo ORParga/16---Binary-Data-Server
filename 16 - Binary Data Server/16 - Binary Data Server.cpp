@@ -10,9 +10,9 @@
 #endif // !IDT_TIMER1_MILIS
 
 #include "16 - Binary Data Server.h"
-#include "C:\Include\Include\ClientControl.h"
+#include "ClientControl_server.h"
 #include "OBDC_Server.h"
-#include "C:\Include\Include\My_XTrace.h"
+#include "My_XTrace_Server.h"
 #include <winsock2.h>
 
 #define MAX_LOADSTRING 100
@@ -436,13 +436,13 @@ void UpdateUI(HWND hwnd, HDC hdc, const wchar_t* message) {
 
         SetWindowText(clientControl[index]->hwnd3_IP, ip_wchar);
         SetWindowText(clientControl[index]->hwnd4_Port, port_wchar);
-        _itow_s(WSAnb.sharedData.data1, text, 10);
+        _itow_s(WSAnb.sharedData[index].data1, text, 10);
         SetWindowText(clientControl[index]->hwnd5a_RecvData, text);
-        _itow_s(WSAnb.sharedData.data2, text, 10);
+        _itow_s(WSAnb.sharedData[index].data2, text, 10);
         SetWindowText(clientControl[index]->hwnd5b_RecvData, text);
-        _itow_s(WSAnb.sharedData.data3, text, 10);
+        _itow_s(WSAnb.sharedData[index].data3, text, 10);
         SetWindowText(clientControl[index]->hwnd5c_RecvData, text);
-        _itow_s(WSAnb.sharedData.data4, text, 10);
+        _itow_s(WSAnb.sharedData[index].data4, text, 10);
         SetWindowText(clientControl[index]->hwnd5d_RecvData, text);
         //SetWindowTextA(clientControl[index]->hwnd5_RecvMessage, (LPCSTR)WSAnb.BufferReceived[index]);
     }

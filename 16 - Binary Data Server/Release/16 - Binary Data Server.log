@@ -1,0 +1,10 @@
+﻿  16 - Binary Data Server.cpp
+E:\PROGRAMACION\C++\Comunications\16 - Binary Data Server\16 - Binary Data Server\OBDC_Server.h(122,27): warning C4101: 'comodin2': variable local sin referencia
+E:\PROGRAMACION\C++\Comunications\16 - Binary Data Server\16 - Binary Data Server\OBDC_Server.h(122,13): warning C4101: 'comodin': variable local sin referencia
+E:\PROGRAMACION\C++\Comunications\16 - Binary Data Server\16 - Binary Data Server\16 - Binary Data Server.cpp(293,22): warning C4101: 'text': variable local sin referencia
+  Generando código
+  Previous IPDB not found, fall back to full compilation.
+E:\PROGRAMACION\C++\Comunications\16 - Binary Data Server\16 - Binary Data Server\OBDC_Server.h(205): warning C4715: 'OBDC_Server::GetIPList': no todas las rutas de acceso de control devuelven un valor
+  All 53 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Generación de código finalizada
+  16 - Binary Data Server.vcxproj -> E:\PROGRAMACION\C++\Comunications\16 - Binary Data Server\16 - Binary Data Server\Release\16 - Binary Data Server.exe

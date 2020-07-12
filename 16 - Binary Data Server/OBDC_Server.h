@@ -57,7 +57,7 @@ public: STATE StateArray[WSA_MAXIMUM_WAIT_EVENTS] = { STATE::NONE };
 protected: static const int SendBufferSize = 512;
 protected: char SendBuffer[SendBufferSize];
 protected: int SendBytes = 0;
-public: SharedClass sharedData;
+public: SharedClass sharedData[WSA_MAXIMUM_WAIT_EVENTS];
 public:unsigned char sharedDataBuffer[sizeof(SharedClass)];
          /// <summary>
          /// printf() style debugging
@@ -523,7 +523,7 @@ protected:void FD_READ_response(int SocketArrayIndex) {
     //El tamaño del buffer es DATA_BUFSIZE+1 para poder colocar un cero al final
     BufferReceived[SocketArrayIndex][ReceivedBytes[SocketArrayIndex]] = 0;
     //Obtiene los dator binarios del buffer leido y los guarda en la variable miembro sharedData.
-    GetBinaryDataFromSocketBuffer(SocketArrayIndex, &this->sharedData );
+    GetBinaryDataFromSocketBuffer(SocketArrayIndex, &(this->sharedData[SocketArrayIndex]) );
 }
 /// <summary>
 /// Extrae los datos recibidos de una transmision TCP, elimina la "basura" al principio 
