@@ -9,7 +9,9 @@
 
 
 
-
+/// <summary>
+/// Object Basic Data Comunicator
+/// </summary>
 class OBDC_Server {
     //********************************* STATE *************************************************
 public: enum class STATE { NONE, CONNECTED, LISTENING, REQUESTING, ERROR_DETECTED };

@@ -289,10 +289,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         for (; control < lastClientControl; control++) {
             if (lParam == (LPARAM)clientControl[control]->hwnd7_SendButton)
             {
-                const int textSize = 1000;
-                char text[textSize];
-                unsigned long numberConverted_dword=0;
-                unsigned char numberConverted_byte=0;
+                //const int textSize = 1000;
+                //char text[textSize];
+                //unsigned long numberConverted_dword=0;
+                //unsigned char numberConverted_byte=0;
                 SharedClass local_sharedData;
                 SetDataFromWindow(clientControl[control]->hwnd6a_SendData, &local_sharedData.data1);
                 SetDataFromWindow(clientControl[control]->hwnd6b_SendData, &local_sharedData.data2);
